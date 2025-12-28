@@ -25,7 +25,14 @@
     </section>
   </div>
 
-  <main class="wrap grid">
+  <!-- Tabs -->
+  <div class="wrap tabs">
+    <button id="tabDashboardBtn" class="tab active" type="button">🏠 Dashboard</button>
+    <button id="tabPlaylistBtn" class="tab" type="button">🎧 Playlist</button>
+  </div>
+
+  <!-- Dashboard panel -->
+  <main id="panelDashboard" class="wrap grid">
     <section class="card">
       <h2>✅ Tracker da semana</h2>
       <p class="hint">Marca o que fizeste hoje. Fica guardado neste dispositivo.</p>
@@ -106,10 +113,17 @@
       <p class="hint">Dica: clica no texto e edita. Fica guardado 🙂</p>
     </section>
 
+    <!-- Playlist add card -->
     <section class="card">
       <h2>🎧 Playlist</h2>
-      <p class="hint">Cola aqui links que te motivam.</p>
-      <textarea id="playlist" rows="5" placeholder="Ex.: https://open.spotify.com/..."></textarea>
+      <p class="hint">Cola um link e clica em “Add”. Vai aparecer no separador Playlist.</p>
+
+      <div class="playlist-add">
+        <input id="playlistUrl" type="text" placeholder="Ex.: https://open.spotify.com/..." />
+        <button id="addPlaylistBtn" type="button">Add</button>
+      </div>
+
+      <p class="hint">Sugestão: Spotify / YouTube / qualquer link.</p>
     </section>
 
     <section class="card">
@@ -121,14 +135,26 @@
     </section>
   </main>
 
-  <footer class="wrap foot">
-  <small>Feito com 💚 e commits.</small>
+  <!-- Playlist panel (tab page) -->
+  <section id="panelPlaylist" class="wrap" hidden>
+    <div class="card">
+      <h2>🎧 Playlist (links)</h2>
+      <p class="hint">Clica num item para abrir num novo separador.</p>
 
-  <div class="theme-toggle" aria-label="Theme toggle">
-    <button id="lightBtn" class="icon-btn" type="button" title="Light mode" aria-label="Light mode">☀️</button>
-    <button id="darkBtn" class="icon-btn" type="button" title="Dark mode" aria-label="Dark mode">🌙</button>
-  </div>
-</footer>
+      <ul id="playlistLinks" class="link-list"></ul>
+
+      <p class="hint">Os links ficam guardados neste dispositivo (localStorage).</p>
+    </div>
+  </section>
+
+  <footer class="wrap foot">
+    <small>Feito com 💚 e commits.</small>
+
+    <div class="theme-toggle" aria-label="Theme toggle">
+      <button id="lightBtn" class="icon-btn" type="button" title="Light mode" aria-label="Light mode">☀️</button>
+      <button id="darkBtn" class="icon-btn" type="button" title="Dark mode" aria-label="Dark mode">🌙</button>
+    </div>
+  </footer>
 
   <script src="app.js"></script>
 </body>

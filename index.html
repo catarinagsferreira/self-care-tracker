@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Self-care Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="wrap">
+    <h1>🌿 Self-care Dashboard</h1>
+    <p class="sub">Pequenas coisas, todos os dias.</p>
+  </header>
+
+  <!-- Random quote card (top, after header) -->
+  <div class="wrap">
+    <section class="card quote-top">
+      <div class="quote-head">
+        <h2>💬 Motivação</h2>
+        <button id="newQuoteBtn" type="button">🔄 Nova frase</button>
+      </div>
+
+      <p id="quoteText" class="quote-text"></p>
+      <p id="quoteMeta" class="quote-meta"></p>
+    </section>
+  </div>
+
+  <main class="wrap grid">
+    <section class="card">
+      <h2>✅ Tracker da semana</h2>
+      <p class="hint">Marca o que fizeste hoje. Fica guardado neste dispositivo.</p>
+
+      <div class="tracker">
+        <div class="row head">
+          <span>Hábito</span>
+          <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+        </div>
+
+        <div class="row" data-habit="water">
+          <span>💧 Água</span>
+          <label><input type="checkbox" data-day="0"></label>
+          <label><input type="checkbox" data-day="1"></label>
+          <label><input type="checkbox" data-day="2"></label>
+          <label><input type="checkbox" data-day="3"></label>
+          <label><input type="checkbox" data-day="4"></label>
+          <label><input type="checkbox" data-day="5"></label>
+          <label><input type="checkbox" data-day="6"></label>
+        </div>
+
+        <div class="row" data-habit="sleep">
+          <span>😴 Sono (8h)</span>
+          <label><input type="checkbox" data-day="0"></label>
+          <label><input type="checkbox" data-day="1"></label>
+          <label><input type="checkbox" data-day="2"></label>
+          <label><input type="checkbox" data-day="3"></label>
+          <label><input type="checkbox" data-day="4"></label>
+          <label><input type="checkbox" data-day="5"></label>
+          <label><input type="checkbox" data-day="6"></label>
+        </div>
+
+        <div class="row" data-habit="reading">
+          <span>📚 Leitura</span>
+          <label><input type="checkbox" data-day="0"></label>
+          <label><input type="checkbox" data-day="1"></label>
+          <label><input type="checkbox" data-day="2"></label>
+          <label><input type="checkbox" data-day="3"></label>
+          <label><input type="checkbox" data-day="4"></label>
+          <label><input type="checkbox" data-day="5"></label>
+          <label><input type="checkbox" data-day="6"></label>
+        </div>
+
+        <div class="row" data-habit="workout">
+          <span>🏃 Treino</span>
+          <label><input type="checkbox" data-day="0"></label>
+          <label><input type="checkbox" data-day="1"></label>
+          <label><input type="checkbox" data-day="2"></label>
+          <label><input type="checkbox" data-day="3"></label>
+          <label><input type="checkbox" data-day="4"></label>
+          <label><input type="checkbox" data-day="5"></label>
+          <label><input type="checkbox" data-day="6"></label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="resetBtn" type="button">Reset semana</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>☀️ Rotina da manhã</h2>
+      <ul class="list" contenteditable="true" id="morning">
+        <li>Beber água</li>
+        <li>Lavar a cara</li>
+        <li>Protetor solar</li>
+        <li>3 min de alongamentos</li>
+      </ul>
+
+      <h2>🌙 Rotina da noite</h2>
+      <ul class="list" contenteditable="true" id="night">
+        <li>Arrumar mochila / roupa</li>
+        <li>Skincare</li>
+        <li>10 min leitura</li>
+        <li>Sem telemóvel 15 min antes</li>
+      </ul>
+
+      <p class="hint">Dica: clica no texto e edita. Fica guardado 🙂</p>
+    </section>
+
+    <section class="card">
+      <h2>🎧 Playlist</h2>
+      <p class="hint">Cola aqui links que te motivam.</p>
+      <textarea id="playlist" rows="5" placeholder="Ex.: https://open.spotify.com/..."></textarea>
+    </section>
+
+    <section class="card">
+      <h2>✨ Frase (fixa)</h2>
+      <input id="quote" type="text" placeholder="Ex.: ‘Progress > perfection’" />
+
+      <h2>🎯 Objetivos</h2>
+      <textarea id="goals" rows="5" placeholder="3 objetivos simples para esta semana..."></textarea>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <small>Feito com 💚 e commits.</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

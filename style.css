@@ -189,6 +189,62 @@ textarea{ resize: vertical; }
   font-size: 13px;
 }
 
+/* Tabs */
+.tabs{
+  display:flex;
+  gap:10px;
+  padding-top: 0;
+  padding-bottom: 6px;
+}
+
+.tab{
+  padding:10px 12px;
+  border-radius:14px;
+  background: var(--btn);
+  border:1px solid var(--border);
+  color: var(--text);
+  cursor:pointer;
+}
+
+.tab.active{
+  background: var(--pill);
+  border-color: var(--border);
+}
+
+/* Playlist input row */
+.playlist-add{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.playlist-add input{
+  flex:1;
+}
+
+/* Playlist links list */
+.link-list{
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.link-list a{
+  display:block;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--card2);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.link-list a:hover{
+  background: var(--hover);
+}
+
 /* Footer + icon-only theme toggle */
 .foot{
   display:flex;

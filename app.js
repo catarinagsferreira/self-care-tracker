@@ -77,11 +77,8 @@ let currentQuoteIndex = null;
 
 function pickRandomIndex(excludeIndex) {
   if (QUOTES.length <= 1) return 0;
-
   let idx = Math.floor(Math.random() * QUOTES.length);
-  while (idx === excludeIndex) {
-    idx = Math.floor(Math.random() * QUOTES.length);
-  }
+  while (idx === excludeIndex) idx = Math.floor(Math.random() * QUOTES.length);
   return idx;
 }
 
@@ -100,18 +97,29 @@ function showRandomQuote() {
   renderQuote(pickRandomIndex(currentQuoteIndex));
 }
 
-/** Self-care tracker + notes (saved locally) */
+/** Elements */
 const els = {
   resetBtn: document.getElementById("resetBtn"),
   morning: document.getElementById("morning"),
   night: document.getElementById("night"),
-  playlist: document.getElementById("playlist"),
   quote: document.getElementById("quote"),
   goals: document.getElementById("goals"),
+
+  // Playlist add UI
+  playlistUrl: document.getElementById("playlistUrl"),
+  addPlaylistBtn: document.getElementById("addPlaylistBtn"),
+
+  // Playlist tab list UI
+  playlistLinks: document.getElementById("playlistLinks"),
+
+  // Tabs
+  tabDashboardBtn: document.getElementById("tabDashboardBtn"),
+  tabPlaylistBtn: document.getElementById("tabPlaylistBtn"),
+  panelDashboard: document.getElementById("panelDashboard"),
+  panelPlaylist: document.getElementById("panelPlaylist"),
 };
 
 function weekKey(date = new Date()) {
-  // key per week (ISO-ish). good enough for a demo.
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
@@ -161,15 +169,14 @@ function initText(state) {
   const text = state.text ?? {};
   if (text.morningHTML) els.morning.innerHTML = text.morningHTML;
   if (text.nightHTML) els.night.innerHTML = text.nightHTML;
-  if (text.playlist) els.playlist.value = text.playlist;
   if (text.quote) els.quote.value = text.quote;
   if (text.goals) els.goals.value = text.goals;
 
   const saveText = () => {
     state.text = {
+      ...state.text,
       morningHTML: els.morning.innerHTML,
       nightHTML: els.night.innerHTML,
-      playlist: els.playlist.value,
       quote: els.quote.value,
       goals: els.goals.value,
     };
@@ -178,7 +185,6 @@ function initText(state) {
 
   els.morning.addEventListener("input", saveText);
   els.night.addEventListener("input", saveText);
-  els.playlist.addEventListener("input", saveText);
   els.quote.addEventListener("input", saveText);
   els.goals.addEventListener("input", saveText);
 }
@@ -194,17 +200,145 @@ function initReset(state) {
   });
 }
 
+/** Tabs */
+const TAB_KEY = "selfcare_tab";
+
+function setTab(tab, save = true) {
+  const isPlaylist = tab === "playlist";
+
+  if (els.panelDashboard) els.panelDashboard.hidden = isPlaylist;
+  if (els.panelPlaylist) els.panelPlaylist.hidden = !isPlaylist;
+
+  els.tabDashboardBtn?.classList.toggle("active", !isPlaylist);
+  els.tabPlaylistBtn?.classList.toggle("active", isPlaylist);
+
+  if (save) localStorage.setItem(TAB_KEY, tab);
+}
+
+function initTabs() {
+  els.tabDashboardBtn?.addEventListener("click", () => setTab("dashboard"));
+  els.tabPlaylistBtn?.addEventListener("click", () => setTab("playlist"));
+
+  const saved = localStorage.getItem(TAB_KEY);
+  setTab(saved === "playlist" ? "playlist" : "dashboard", false);
+}
+
+/** Playlist */
+function normalizeUrl(input) {
+  const raw = (input || "").trim();
+  if (!raw) return null;
+
+  const withProto = raw.startsWith("http://") || raw.startsWith("https://")
+    ? raw
+    : `https://${raw}`;
+
+  try {
+    const u = new URL(withProto);
+    return u.toString();
+  } catch {
+    return null;
+  }
+}
+
+function titleFromUrl(urlStr) {
+  try {
+    const u = new URL(urlStr);
+    const path = (u.pathname && u.pathname !== "/")
+      ? u.pathname.slice(0, 28) + (u.pathname.length > 28 ? "…" : "")
+      : "";
+    return `${u.hostname}${path}`;
+  } catch {
+    return urlStr;
+  }
+}
+
+function renderPlaylist(state) {
+  const listEl = els.playlistLinks;
+  if (!listEl) return;
+
+  const items = state.text?.playlistItems ?? [];
+  listEl.innerHTML = "";
+
+  if (items.length === 0) {
+    const li = document.createElement("li");
+    li.className = "hint";
+    li.textContent = "Ainda não há links. Volta ao Dashboard e adiciona um 🙂";
+    listEl.appendChild(li);
+    return;
+  }
+
+  for (const item of items) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = item.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = item.title || titleFromUrl(item.url);
+    li.appendChild(a);
+    listEl.appendChild(li);
+  }
+}
+
+function initPlaylist(state) {
+  // Backward compatibility: convert old text field `playlist` (newline links) into playlistItems once
+  if (state.text?.playlist && !state.text.playlistItems) {
+    const lines = String(state.text.playlist).split("\n").map(s => s.trim()).filter(Boolean);
+    state.text.playlistItems = lines
+      .map(line => normalizeUrl(line))
+      .filter(Boolean)
+      .map(url => ({ url, title: titleFromUrl(url) }));
+    delete state.text.playlist;
+    saveState(state);
+  }
+
+  renderPlaylist(state);
+
+  els.addPlaylistBtn?.addEventListener("click", () => {
+    const url = normalizeUrl(els.playlistUrl?.value);
+    if (!url) {
+      alert("URL inválido. Cola um link completo (ex.: https://...)");
+      return;
+    }
+
+    state.text ??= {};
+    state.text.playlistItems ??= [];
+
+    if (state.text.playlistItems.some(x => x.url === url)) {
+      alert("Esse link já está na playlist 🙂");
+      return;
+    }
+
+    state.text.playlistItems.push({ url, title: titleFromUrl(url) });
+    saveState(state);
+    renderPlaylist(state);
+
+    if (els.playlistUrl) els.playlistUrl.value = "";
+  });
+
+  els.playlistUrl?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      els.addPlaylistBtn?.click();
+    }
+  });
+}
+
 (function main() {
   // Quotes
   showRandomQuote();
   document.getElementById("newQuoteBtn")?.addEventListener("click", showRandomQuote);
 
-  // Tracker
+  // Load state
   const state = loadState();
   ensureWeek(state);
   saveState(state);
 
+  // Init dashboard features
   initTracker(state);
   initText(state);
   initReset(state);
+
+  // Tabs + Playlist
+  initTabs();
+  initPlaylist(state);
 })();

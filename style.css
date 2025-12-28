@@ -1,21 +1,54 @@
 :root{
   --bg:#0b0f14;
+  --bg-accent:#1c2a3a;
+
   --card:#121a22;
+  --card2: rgba(0,0,0,.18);
+
   --text:#eaf2ff;
   --muted:#a8b3c4;
+
   --border:rgba(255,255,255,.10);
   --pill:rgba(255,255,255,.06);
+
+  --hover: rgba(255,255,255,.10);
+  --btn: rgba(255,255,255,.06);
+
+  --shadow: 0 12px 30px rgba(0,0,0,.25);
+  --accent:#5eead4;
+}
+
+html[data-theme="light"]{
+  --bg:#f6f8fc;
+  --bg-accent:#dfe9f7;
+
+  --card:#ffffff;
+  --card2: rgba(20, 40, 80, .04);
+
+  --text:#0f172a;
+  --muted:#475569;
+
+  --border:rgba(15, 23, 42, .12);
+  --pill:rgba(15, 23, 42, .05);
+
+  --hover: rgba(15, 23, 42, .08);
+  --btn: rgba(15, 23, 42, .05);
+
+  --shadow: 0 12px 30px rgba(15, 23, 42, .10);
+  --accent:#0ea5e9;
 }
 
 *{ box-sizing:border-box; }
+
 body{
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: radial-gradient(900px 600px at 20% 10%, #1c2a3a 0%, var(--bg) 55%);
+  background: radial-gradient(900px 600px at 20% 10%, var(--bg-accent) 0%, var(--bg) 55%);
   color:var(--text);
 }
 
 .wrap{ max-width:1050px; margin:0 auto; padding:20px; }
+
 h1{ margin:6px 0 0; font-size:34px; }
 .sub{ margin:6px 0 0; color:var(--muted); }
 
@@ -33,7 +66,7 @@ h1{ margin:6px 0 0; font-size:34px; }
   border:1px solid var(--border);
   border-radius:18px;
   padding:18px;
-  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+  box-shadow: var(--shadow);
 }
 
 h2{ margin:0 0 10px; font-size:18px; }
@@ -42,27 +75,34 @@ h2{ margin:0 0 10px; font-size:18px; }
 .tracker{
   display:grid;
   gap:8px;
-  background: rgba(0,0,0,.18);
+  background: var(--card2);
   border:1px solid var(--border);
   border-radius:14px;
   padding:12px;
 }
+
 .row{
   display:grid;
   grid-template-columns: 1.4fr repeat(7, 1fr);
   align-items:center;
   gap:6px;
 }
+
 .row.head{
   color:var(--muted);
   font-size:12px;
 }
+
 .row span:first-child{
   padding:10px 10px;
   background: var(--pill);
   border-radius:12px;
 }
-.row.head span:first-child{ background: transparent; padding:0; }
+
+.row.head span:first-child{
+  background: transparent;
+  padding:0;
+}
 
 label{
   display:flex;
@@ -75,7 +115,7 @@ label{
 
 input[type="checkbox"]{
   width:18px; height:18px;
-  accent-color:#5eead4;
+  accent-color: var(--accent);
 }
 
 .actions{
@@ -83,58 +123,93 @@ input[type="checkbox"]{
   justify-content:flex-end;
   margin-top:12px;
 }
+
 button{
   border:1px solid var(--border);
-  background: rgba(255,255,255,.06);
+  background: var(--btn);
   color:var(--text);
   padding:10px 12px;
   border-radius:12px;
   cursor:pointer;
 }
-button:hover{ background: rgba(255,255,255,.10); }
+button:hover{ background: var(--hover); }
 
+/* KEY FIX: lists inside the editable box */
 .list{
   margin:0 0 12px;
-  padding-left:18px;
+  padding: 0;
   color:var(--text);
+  list-style-position: inside;
 }
-.list li{ margin:6px 0; }
+
+.list li{
+  margin:8px 0;
+  padding-left: 6px;
+}
+
 .list[contenteditable="true"]{
-  background: rgba(0,0,0,.18);
+  background: var(--card2);
   border:1px solid var(--border);
   border-radius:14px;
-  padding:12px 14px;
+  padding:14px 14px;
   outline:none;
 }
 
 textarea, input[type="text"]{
   width:100%;
-  background: rgba(0,0,0,.18);
+  background: var(--card2);
   border:1px solid var(--border);
   border-radius:14px;
   padding:12px 14px;
   color:var(--text);
   outline:none;
 }
+
 textarea{ resize: vertical; }
 
-.foot{ color:var(--muted); padding-bottom:28px; }
-
-/* Quote card styles */
+/* Quote card */
 .quote-top { margin-top: 10px; }
+
 .quote-head{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
 }
+
 .quote-text{
   font-size: 16px;
   margin: 10px 0 6px;
   line-height: 1.5;
 }
+
 .quote-meta{
   margin: 0;
   color: var(--muted);
   font-size: 13px;
+}
+
+/* Footer + icon-only theme toggle */
+.foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--muted);
+  padding-bottom:28px;
+}
+
+.theme-toggle{
+  display:flex;
+  gap:10px;
+}
+
+.icon-btn{
+  width:42px;
+  height:42px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  font-size:18px;
 }
